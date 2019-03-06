@@ -55,8 +55,8 @@ final class DataContainerSendingNotificationDcaListener
 
         if ($dataContainer instanceof DataContainer && $dataContainer->table) {
             $collection = $repository->findBy(
-                ['.hofff_dca_notification_table=?'],
-                [$dataContainer->table],
+                ['.type=?', '.hofff_dca_notification_table=?'],
+                [DcaNotification::TYPE_SUBMIT_NOTIFICATION, $dataContainer->table],
                 ['.order' => 'title']
             );
         } else {
