@@ -17,7 +17,7 @@ final class DcaNotification
     private const QUERY_SUPPORTED_TABLES = <<<'SQL'
 SELECT DISTINCT hofff_dca_notification_table
 FROM tl_nc_notification
-WHERE hofff_dca_notification_table != :empty
+WHERE type = :type AND hofff_dca_notification_table != :empty 
 SQL;
 
     /** @var Connection */
@@ -44,6 +44,7 @@ SQL;
     {
         try {
             $statement = $this->connection->prepare(self::QUERY_SUPPORTED_TABLES);
+            $statement->bindValue('type', self::TYPE_SUBMIT_NOTIFICATION);
             $statement->bindValue('empty', '');
             $statement->execute();
         } catch (InvalidFieldNameException $e) {
