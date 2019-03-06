@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Hofff\Contao\DcaNotification\Notification\Types;
+
 $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['hofff_dca_notification'] = [
-    'hofff_dca_notification' => [
+    Types::DCA_NOTIFICATION => [
         'recipients'           => ['raw_*', 'value_*'],
         'email_subject'        => ['label_*', 'raw_*', 'value_*'],
         'email_text'           => ['label_*', 'raw_*', 'value_*'],

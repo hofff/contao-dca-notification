@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\DcaNotification\EventListener\Hook;
 
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\DcaNotification\EventListener\Dca\DcaSendingNotificationDcaListener;
+use Netzmacht\Contao\Toolkit\Dca\Definition;
 use Netzmacht\Contao\Toolkit\Dca\Manager as DcaManager;
 use PDO;
 use Symfony\Component\Translation\TranslatorInterface;
 use function array_flip;
 use function array_key_exists;
+use function is_string;
 
 final class AddNotificationFieldsListener
 {
@@ -43,37 +46,10 @@ SQL;
         }
 
         $definition = $this->dcaManager->getDefinition($dataContainerName);
-        $definition->modify(
-            ['fields'],
-            function (array $fields): array {
-                $fields['hofff_dca_notification_send']         = $this->notificationSendDca();
-                $fields['hofff_dca_notification_notification'] = $this->notificationDca();
 
-                return $fields;
-            }
-        );
-
-        $definition->modify(
-            ['config', 'onsubmit_callback'],
-            function ($callbacks): array {
-                $callbacks   = $callbacks ?: [];
-                $callbacks[] = [DcaSendingNotificationDcaListener::class, 'onSubmit'];
-
-                return $callbacks;
-            }
-        );
-
-        $definition->set(['subpalettes', 'hofff_dca_notification_send'], 'hofff_dca_notification_notification');
-
-        $definition->modify(
-            ['palettes', '__selector__'],
-            function ($config) {
-                $config   = $config ?: [];
-                $config[] = 'hofff_dca_notification_send';
-
-                return $config;
-            }
-        );
+        $this->addFieldsToDefinition($definition);
+        $this->addSubPaletteToDefinition($definition);
+        $this->addLegendToExistingPalettes($definition);
     }
 
     private function supports(string $dataContainerName): bool
@@ -96,6 +72,70 @@ SQL;
 
         return array_flip($statement->fetchAll(PDO::FETCH_COLUMN));
     }
+
+    /**
+     * @param Definition $definition
+     */
+    protected function addFieldsToDefinition(Definition $definition): void
+    {
+        $definition->modify(
+            ['fields'],
+            function (array $fields): array {
+                $fields['hofff_dca_notification_send']         = $this->notificationSendDca();
+                $fields['hofff_dca_notification_notification'] = $this->notificationDca();
+
+                return $fields;
+            }
+        );
+
+        $definition->modify(
+            ['config', 'onsubmit_callback'],
+            function ($callbacks): array {
+                $callbacks   = $callbacks ?: [];
+                $callbacks[] = [DcaSendingNotificationDcaListener::class, 'onSubmit'];
+
+                return $callbacks;
+            }
+        );
+    }
+
+    /**
+     * @param Definition $definition
+     */
+    protected function addSubPaletteToDefinition(Definition $definition): void
+    {
+        $definition->set(['subpalettes', 'hofff_dca_notification_send'], 'hofff_dca_notification_notification');
+
+        $definition->modify(
+            ['palettes', '__selector__'],
+            function ($config) {
+                $config   = $config ?: [];
+                $config[] = 'hofff_dca_notification_send';
+
+                return $config;
+            }
+        );
+    }
+
+    private function addLegendToExistingPalettes(Definition $definition): void
+    {
+        $manipulator = PaletteManipulator::create()
+            ->addLegend('hofff_dca_notification_legend', null)
+            ->addField(
+                'hofff_dca_notification_send',
+                'hofff_dca_notification_legend',
+                PaletteManipulator::POSITION_APPEND
+            );
+
+        foreach ((array) $definition->get(['palettes'], []) as $name => $config) {
+            if (!is_string($config)) {
+                continue;
+            }
+
+            $manipulator->applyToPalette($name, $definition->getName());
+        }
+    }
+
 
     /** @return mixed[] */
     private function notificationSendDca(): array
