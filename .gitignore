@@ -1,0 +1,9 @@
+/*
+!/.gitignore
+!/.composer-require-checker.json
+!/contao-module/
+!/runonce/
+!/src/
+!/README.md
+!/composer.json
+!phpcs.xml.dist

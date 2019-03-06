@@ -1,0 +1,62 @@
+{
+  "name": "hofff/contao-dca-notification",
+  "description": "This library sends notification for any dca based data container",
+  "keywords": [
+    "contao",
+    "data container",
+    "dca",
+    "notification"
+  ],
+  "type": "contao-bundle",
+  "homepage": "https://hofff.com/",
+  "license": "LGPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Nicky Hoff",
+      "email": "nick@hofff.com",
+      "homepage": "https://hofff.com/",
+      "role": "Maintainer"
+    },
+    {
+      "name": "David Molineus",
+      "homepage": "https://hofff.com",
+      "email": "david@hofff.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "info@hofff.com",
+    "issues": "https://github.com/hofff/contao-dca-notification/issues",
+    "source": "https://github.com/hofff/contao-dca-notification"
+  },
+  "require": {
+    "php": ">=7.1",
+    "ext-pdo": "*",
+    "contao/core-bundle": "~4.4",
+    "doctrine/dbal": "^2.5",
+    "netzmacht/contao-toolkit": "^3.2",
+    "symfony/config": "^3.3 || ^4.0",
+    "symfony/dependency-injection": "^3.3 || ^4.0",
+    "symfony/event-dispatcher": "^3.3 || ^4.0",
+    "symfony/http-kernel": "^3.3 || ^4.0",
+    "terminal42/notification_center": "^1.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Hofff\\Contao\\DcaNotification\\": "src/"
+    }
+  },
+  "conflict": {
+    "contao/manager-plugin": "<2.1 || >= 3.0"
+  },
+  "extra": {
+    "contao-manager-plugin": "Hofff\\Contao\\DcaNotification\\ContaoManager\\Plugin",
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.1",
+    "doctrine/coding-standard": "^5.0"
+  }
+}

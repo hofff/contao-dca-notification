@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="false" autoconfigure="false" autowire="false"/>
+
+        <!-- DCA Listeners -->
+        <service id="Hofff\Contao\DcaNotification\EventListener\Dca\DcaSendingNotificationDcaListener" public="true">
+            <argument type="service" id="netzmacht.contao_toolkit.dca.manager"/>
+            <argument type="service" id="netzmacht.contao_toolkit.repository_manager"/>
+            <argument type="service" id="database_connection"/>
+        </service>
+
+        <service id="Hofff\Contao\DcaNotification\EventListener\Dca\NotificationDcaListener" public="true">
+            <argument type="service" id="netzmacht.contao_toolkit.dca.manager"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="contao.resource_finder"/>
+            <argument type="service" id="database_connection"/>
+        </service>
+
+        <!-- Hook listeners -->
+        <service id="Hofff\Contao\DcaNotification\EventListener\Hook\AddNotificationFieldsListener" public="true">
+            <argument type="service" id="netzmacht.contao_toolkit.dca.manager"/>
+            <argument type="service" id="database_connection"/>
+            <argument type="service" id="translator"/>
+            <tag name="contao.hook" hook="loadDataContainer"/>
+        </service>
+    </services>
+</container>
