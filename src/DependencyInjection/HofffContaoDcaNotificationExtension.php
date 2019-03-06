@@ -11,7 +11,8 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 final class HofffContaoDcaNotificationExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container): void
+    /** @param mixed[][] $configs */
+    public function load(array $configs, ContainerBuilder $container) : void
     {
         $loader = new XmlFileLoader(
             $container,

@@ -32,11 +32,11 @@ final class DataContainerSendingNotificationDcaListener
         $this->connection        = $connection;
     }
 
-    public function onSubmit(DataContainer $dataContainer): void
+    public function onSubmit(DataContainer $dataContainer) : void
     {
         $activeRecord = $dataContainer->activeRecord;
 
-        if (!$activeRecord->hofff_dca_notification_send || !$activeRecord->hofff_dca_notification_notification) {
+        if (! $activeRecord->hofff_dca_notification_send || ! $activeRecord->hofff_dca_notification_notification) {
             return;
         }
 
@@ -49,7 +49,7 @@ final class DataContainerSendingNotificationDcaListener
      *
      * @return string[]
      */
-    public function notificationOptions($dataContainer): array
+    public function notificationOptions($dataContainer) : array
     {
         $repository = $this->repositoryManager->getRepository(Notification::class);
 
@@ -66,24 +66,25 @@ final class DataContainerSendingNotificationDcaListener
         return OptionsBuilder::fromCollection($collection, 'title')->getOptions();
     }
 
-    private function sendNotification(DataContainer $dataContainer): void
+    private function sendNotification(DataContainer $dataContainer) : void
     {
         $repository   = $this->repositoryManager->getRepository(Notification::class);
         $notification = $repository->find((int) $dataContainer->activeRecord->hofff_dca_notification_notification);
 
-        if (!$notification instanceof Notification || $notification->type !== Types::DCA_NOTIFICATION) {
+        if (! $notification instanceof Notification || $notification->type !== Types::DCA_NOTIFICATION) {
             return;
         }
 
         $notification->send($this->buildTokens($dataContainer));
     }
 
-    private function resetSendValue(string $table, int $recordId): void
+    private function resetSendValue(string $table, int $recordId) : void
     {
         $this->connection->update($table, ['hofff_dca_notification_send' => ''], ['id' => $recordId]);
     }
 
-    private function buildTokens(DataContainer $dataContainer): array
+    /** @return mixed[] */
+    private function buildTokens(DataContainer $dataContainer) : array
     {
         $formatter = $this->dcaManager->getFormatter($dataContainer->table);
         $tokens    = [];

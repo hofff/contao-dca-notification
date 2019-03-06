@@ -8,7 +8,7 @@ use Hofff\Contao\DcaNotification\Notification\Types;
 // Config
 $GLOBALS['TL_DCA']['tl_nc_notification']['config']['onsubmit_callback'][] = [
     NotificationDcaListener::class,
-    'updateTableSchema'
+    'updateTableSchema',
 ];
 
 

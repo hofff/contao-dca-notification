@@ -6,5 +6,4 @@ namespace Hofff\Contao\DcaNotification;
 
 final class HofffContaoDcaNotificationBundle
 {
-
 }

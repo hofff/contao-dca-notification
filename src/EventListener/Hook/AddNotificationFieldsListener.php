@@ -39,9 +39,9 @@ SQL;
         $this->translator = $translator;
     }
 
-    public function onLoadDataContainer(string $dataContainerName): void
+    public function onLoadDataContainer(string $dataContainerName) : void
     {
-        if (!$this->supports($dataContainerName)) {
+        if (! $this->supports($dataContainerName)) {
             return;
         }
 
@@ -52,7 +52,7 @@ SQL;
         $this->addLegendToExistingPalettes($definition);
     }
 
-    private function supports(string $dataContainerName): bool
+    private function supports(string $dataContainerName) : bool
     {
         static $supportedTables = null;
 
@@ -64,7 +64,7 @@ SQL;
     }
 
     /** @return int[] */
-    private function getSupportedTables(): array
+    private function getSupportedTables() : array
     {
         $statement = $this->connection->prepare(self::QUERY_SUPPORTED_TABLES);
         $statement->bindValue('empty', '');
@@ -73,14 +73,11 @@ SQL;
         return array_flip($statement->fetchAll(PDO::FETCH_COLUMN));
     }
 
-    /**
-     * @param Definition $definition
-     */
-    protected function addFieldsToDefinition(Definition $definition): void
+    protected function addFieldsToDefinition(Definition $definition) : void
     {
         $definition->modify(
             ['fields'],
-            function (array $fields): array {
+            function (array $fields) : array {
                 $fields['hofff_dca_notification_send']         = $this->notificationSendDca();
                 $fields['hofff_dca_notification_notification'] = $this->notificationDca();
 
@@ -90,7 +87,7 @@ SQL;
 
         $definition->modify(
             ['config', 'onsubmit_callback'],
-            function ($callbacks): array {
+            static function ($callbacks) : array {
                 $callbacks   = $callbacks ?: [];
                 $callbacks[] = [DataContainerSendingNotificationDcaListener::class, 'onSubmit'];
 
@@ -99,16 +96,13 @@ SQL;
         );
     }
 
-    /**
-     * @param Definition $definition
-     */
-    protected function addSubPaletteToDefinition(Definition $definition): void
+    protected function addSubPaletteToDefinition(Definition $definition) : void
     {
         $definition->set(['subpalettes', 'hofff_dca_notification_send'], 'hofff_dca_notification_notification');
 
         $definition->modify(
             ['palettes', '__selector__'],
-            function ($config) {
+            static function ($config) {
                 $config   = $config ?: [];
                 $config[] = 'hofff_dca_notification_send';
 
@@ -117,7 +111,7 @@ SQL;
         );
     }
 
-    private function addLegendToExistingPalettes(Definition $definition): void
+    private function addLegendToExistingPalettes(Definition $definition) : void
     {
         $manipulator = PaletteManipulator::create()
             ->addLegend('hofff_dca_notification_legend', null)
@@ -128,7 +122,7 @@ SQL;
             );
 
         foreach ((array) $definition->get(['palettes'], []) as $name => $config) {
-            if (!is_string($config)) {
+            if (! is_string($config)) {
                 continue;
             }
 
@@ -138,7 +132,7 @@ SQL;
 
 
     /** @return mixed[] */
-    private function notificationSendDca(): array
+    private function notificationSendDca() : array
     {
         return [
             'label'     => [
@@ -156,7 +150,7 @@ SQL;
     }
 
     /** @return mixed[] */
-    private function notificationDca(): array
+    private function notificationDca() : array
     {
         return [
             'label'            => [

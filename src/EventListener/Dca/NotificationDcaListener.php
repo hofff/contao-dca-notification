@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\DcaNotification\EventListener\Dca;
 
-use function array_key_exists;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\DataContainer;
 use Contao\DcaExtractor;
@@ -14,6 +13,7 @@ use Netzmacht\Contao\Toolkit\Dca\Listener\AbstractListener;
 use Netzmacht\Contao\Toolkit\Dca\Manager;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\TranslatorInterface;
+use function array_key_exists;
 
 final class NotificationDcaListener extends AbstractListener
 {
@@ -42,7 +42,7 @@ final class NotificationDcaListener extends AbstractListener
         $this->connection     = $connection;
     }
 
-    public function updateTableSchema(DataContainer $dataContainer): void
+    public function updateTableSchema(DataContainer $dataContainer) : void
     {
         $activeRecord = $dataContainer->activeRecord;
 
@@ -53,26 +53,28 @@ final class NotificationDcaListener extends AbstractListener
         $tableName     = $activeRecord->hofff_dca_notification_table;
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$tableName || !$schemaManager->tablesExist([$tableName])) {
+        if (! $tableName || ! $schemaManager->tablesExist([$tableName])) {
             return;
         }
 
         $columns = $schemaManager->listTableColumns($tableName);
-        if (!isset($columns['hofff_dca_notification_send'])) {
+        if (! isset($columns['hofff_dca_notification_send'])) {
             $this->connection->executeQuery(
                 'ALTER TABLE %s ADD hofff_dca_notification_send CHAR(1) NOT NULL DEFAULT \'\''
             );
         }
 
-        if (!isset($columns['hofff_dca_notification_notification'])) {
-            $this->connection->executeQuery(
-                'ALTER TABLE %s ADD hofff_dca_notification_notification INT(10) UNSIGNED NOT NULL DEFAULT \'0\''
-            );
+        if (isset($columns['hofff_dca_notification_notification'])) {
+            return;
         }
+
+        $this->connection->executeQuery(
+            'ALTER TABLE %s ADD hofff_dca_notification_notification INT(10) UNSIGNED NOT NULL DEFAULT \'0\''
+        );
     }
 
     /** @return string[] */
-    public function dcaOptions(): array
+    public function dcaOptions() : array
     {
         $options   = [];
         $processed = [];
@@ -89,7 +91,7 @@ final class NotificationDcaListener extends AbstractListener
 
             $tableName = $file->getBasename('.php');
             $extract   = DcaExtractor::getInstance($tableName);
-            if (!$extract->isDbTable()) {
+            if (! $extract->isDbTable()) {
                 continue;
             }
 
@@ -99,7 +101,7 @@ final class NotificationDcaListener extends AbstractListener
         return $options;
     }
 
-    private function translateTableName(string $tableName): string
+    private function translateTableName(string $tableName) : string
     {
         $key   = 'MOD.' . $tableName;
         $label = $this->translator->trans('MOD.' . $tableName, [], 'contao_modules');
