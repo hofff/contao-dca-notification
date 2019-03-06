@@ -23,9 +23,15 @@
         <!-- Hook listeners -->
         <service id="Hofff\Contao\DcaNotification\EventListener\Hook\AddNotificationFieldsListener" public="true">
             <argument type="service" id="netzmacht.contao_toolkit.dca.manager"/>
-            <argument type="service" id="database_connection"/>
+            <argument type="service" id="Hofff\Contao\DcaNotification\Notification\DcaNotification"/>
             <argument type="service" id="translator"/>
             <tag name="contao.hook" hook="loadDataContainer"/>
+        </service>
+
+        <service id="Hofff\Contao\DcaNotification\EventListener\Hook\TranslateNotificationLegendListener" public="true">
+            <argument type="service" id="Hofff\Contao\DcaNotification\Notification\DcaNotification"/>
+            <argument type="service" id="translator" />
+            <tag name="contao.hook" hook="loadLanguageFile"/>
         </service>
     </services>
 </container>

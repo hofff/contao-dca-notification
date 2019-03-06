@@ -8,12 +8,13 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\DataContainer;
 use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
-use Hofff\Contao\DcaNotification\Notification\Types;
+use Hofff\Contao\DcaNotification\Notification\DcaNotification;
 use Netzmacht\Contao\Toolkit\Dca\Listener\AbstractListener;
 use Netzmacht\Contao\Toolkit\Dca\Manager;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\TranslatorInterface;
 use function array_key_exists;
+use function sprintf;
 
 final class NotificationDcaListener extends AbstractListener
 {
@@ -46,7 +47,7 @@ final class NotificationDcaListener extends AbstractListener
     {
         $activeRecord = $dataContainer->activeRecord;
 
-        if ($activeRecord->type !== Types::DCA_NOTIFICATION) {
+        if ($activeRecord->type !== DcaNotification::TYPE_SUBMIT_NOTIFICATION) {
             return;
         }
 
@@ -60,7 +61,10 @@ final class NotificationDcaListener extends AbstractListener
         $columns = $schemaManager->listTableColumns($tableName);
         if (! isset($columns['hofff_dca_notification_send'])) {
             $this->connection->executeQuery(
-                'ALTER TABLE %s ADD hofff_dca_notification_send CHAR(1) NOT NULL DEFAULT \'\''
+                sprintf(
+                    'ALTER TABLE %s ADD hofff_dca_notification_send CHAR(1) NOT NULL DEFAULT \'\'',
+                    $tableName
+                )
             );
         }
 
@@ -69,12 +73,15 @@ final class NotificationDcaListener extends AbstractListener
         }
 
         $this->connection->executeQuery(
-            'ALTER TABLE %s ADD hofff_dca_notification_notification INT(10) UNSIGNED NOT NULL DEFAULT \'0\''
+            sprintf(
+                'ALTER TABLE %s ADD hofff_dca_notification_notification INT(10) UNSIGNED NOT NULL DEFAULT \'0\'',
+                $tableName
+            )
         );
     }
 
     /** @return string[] */
-    public function dcaOptions() : array
+    public function tableOptions() : array
     {
         $options   = [];
         $processed = [];
@@ -110,6 +117,6 @@ final class NotificationDcaListener extends AbstractListener
             return $tableName;
         }
 
-        return $key;
+        return sprintf('%s [%s]', $label, $tableName);
     }
 }

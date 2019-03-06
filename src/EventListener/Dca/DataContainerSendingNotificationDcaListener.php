@@ -8,7 +8,7 @@ use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\Model;
 use Doctrine\DBAL\Connection;
-use Hofff\Contao\DcaNotification\Notification\Types;
+use Hofff\Contao\DcaNotification\Notification\DcaNotification;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 use Netzmacht\Contao\Toolkit\Dca\Manager as DcaManager;
 use Netzmacht\Contao\Toolkit\Dca\Options\OptionsBuilder;
@@ -71,7 +71,7 @@ final class DataContainerSendingNotificationDcaListener
         $repository   = $this->repositoryManager->getRepository(Notification::class);
         $notification = $repository->find((int) $dataContainer->activeRecord->hofff_dca_notification_notification);
 
-        if (! $notification instanceof Notification || $notification->type !== Types::DCA_NOTIFICATION) {
+        if (! $notification instanceof Notification || $notification->type !== DcaNotification::TYPE_SUBMIT_NOTIFICATION) {
             return;
         }
 
