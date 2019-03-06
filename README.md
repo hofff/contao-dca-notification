@@ -31,6 +31,7 @@ All fields being available in the active record of the data container are availa
  - **label_\*** The label of a field
  - **raw_\*** The raw value of a field
  - **value_\***  The parsed value of a field
+ - **admin_email** The email of the admin
  
 Limitations
 -----------

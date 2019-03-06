@@ -87,7 +87,7 @@ final class DataContainerSendingNotificationDcaListener
     private function buildTokens(DataContainer $dataContainer) : array
     {
         $formatter = $this->dcaManager->getFormatter($dataContainer->table);
-        $tokens    = [];
+        $tokens    = ['admin_email' => $GLOBALS['TL_ADMIN_EMAIL']];
 
         if ($dataContainer->activeRecord instanceof Result || $dataContainer->activeRecord instanceof Model) {
             $row = $dataContainer->activeRecord->row();
