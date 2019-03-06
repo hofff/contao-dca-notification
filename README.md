@@ -8,7 +8,7 @@ Requirements
 ------------
 
  - Contao `^4.4`
- - PHP `>= 1.7`
+ - PHP `>= 7.1`
  - Symfony `^3.3 || ^4.0`
  
 Install
