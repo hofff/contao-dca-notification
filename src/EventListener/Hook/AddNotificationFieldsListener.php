@@ -6,7 +6,7 @@ namespace Hofff\Contao\DcaNotification\EventListener\Hook;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Doctrine\DBAL\Connection;
-use Hofff\Contao\DcaNotification\EventListener\Dca\DcaSendingNotificationDcaListener;
+use Hofff\Contao\DcaNotification\EventListener\Dca\DataContainerSendingNotificationDcaListener;
 use Netzmacht\Contao\Toolkit\Dca\Definition;
 use Netzmacht\Contao\Toolkit\Dca\Manager as DcaManager;
 use PDO;
@@ -92,7 +92,7 @@ SQL;
             ['config', 'onsubmit_callback'],
             function ($callbacks): array {
                 $callbacks   = $callbacks ?: [];
-                $callbacks[] = [DcaSendingNotificationDcaListener::class, 'onSubmit'];
+                $callbacks[] = [DataContainerSendingNotificationDcaListener::class, 'onSubmit'];
 
                 return $callbacks;
             }
@@ -166,7 +166,7 @@ SQL;
             'inputType'        => 'select',
             'exclude'          => true,
             'options_callback' => [
-                DcaSendingNotificationDcaListener::class,
+                DataContainerSendingNotificationDcaListener::class,
                 'notificationOptions',
             ],
             'eval'             => [

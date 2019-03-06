@@ -14,7 +14,7 @@ use Netzmacht\Contao\Toolkit\Dca\Manager as DcaManager;
 use Netzmacht\Contao\Toolkit\Dca\Options\OptionsBuilder;
 use NotificationCenter\Model\Notification;
 
-final class DcaSendingNotificationDcaListener
+final class DataContainerSendingNotificationDcaListener
 {
     /** @var DcaManager */
     private $dcaManager;
@@ -41,7 +41,7 @@ final class DcaSendingNotificationDcaListener
         }
 
         $this->resetSendValue($dataContainer->table, (int) $dataContainer->id);
-        $this->sendNotification($dataContainer->table, $activeRecord->hofff_dca_notification_notification);
+        $this->sendNotification($dataContainer);
     }
 
     /**

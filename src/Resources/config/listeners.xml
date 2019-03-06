@@ -7,7 +7,7 @@
         <defaults public="false" autoconfigure="false" autowire="false"/>
 
         <!-- DCA Listeners -->
-        <service id="Hofff\Contao\DcaNotification\EventListener\Dca\DcaSendingNotificationDcaListener" public="true">
+        <service id="Hofff\Contao\DcaNotification\EventListener\Dca\DataContainerSendingNotificationDcaListener" public="true">
             <argument type="service" id="netzmacht.contao_toolkit.dca.manager"/>
             <argument type="service" id="netzmacht.contao_toolkit.repository_manager"/>
             <argument type="service" id="database_connection"/>
