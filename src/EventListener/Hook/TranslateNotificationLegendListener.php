@@ -28,7 +28,7 @@ final class TranslateNotificationLegendListener
         }
 
         $GLOBALS['TL_LANG'][$name]['hofff_dca_notification_legend'] = $this->translator->trans(
-            'hofff_dca_notification_legend',
+            'hofff_dca_notification.hofff_dca_notification_legend',
             [],
             'contao_hofff_dca_notification',
             $language

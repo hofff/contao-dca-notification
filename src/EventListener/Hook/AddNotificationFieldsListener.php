@@ -109,8 +109,16 @@ final class AddNotificationFieldsListener
     {
         return [
             'label'     => [
-                $this->translator->trans('hofff_dca_notification_send.0', [], 'contao_hofff_dca_notification'),
-                $this->translator->trans('hofff_dca_notification_send.1', [], 'contao_hofff_dca_notification'),
+                $this->translator->trans(
+                    'hofff_dca_notification.hofff_dca_notification_send.0',
+                    [],
+                    'contao_hofff_dca_notification'
+                ),
+                $this->translator->trans(
+                    'hofff_dca_notification.hofff_dca_notification_send.1',
+                    [],
+                    'contao_hofff_dca_notification'
+                ),
             ],
             'inputType' => 'checkbox',
             'exclude'   => true,
@@ -127,8 +135,16 @@ final class AddNotificationFieldsListener
     {
         return [
             'label'            => [
-                $this->translator->trans('hofff_dca_notification_notification.0', [], 'contao_hofff_dca_notification'),
-                $this->translator->trans('hofff_dca_notification_notification.1', [], 'contao_hofff_dca_notification'),
+                $this->translator->trans(
+                    'hofff_dca_notification.hofff_dca_notification_notification.0',
+                    [],
+                    'contao_hofff_dca_notification'
+                ),
+                $this->translator->trans(
+                    'hofff_dca_notification.hofff_dca_notification_notification.1',
+                    [],
+                    'contao_hofff_dca_notification'
+                ),
             ],
             'inputType'        => 'select',
             'exclude'          => true,
