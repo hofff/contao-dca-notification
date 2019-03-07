@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hofff\Contao\DcaNotification\Notification;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\InvalidFieldNameException;
+use Doctrine\DBAL\DBALException;
 use PDO;
 use function array_flip;
 use function array_key_exists;
@@ -39,7 +39,7 @@ SQL;
         return array_key_exists($tableName, $supportedTables);
     }
 
-    /** @return int[] */
+    /** @return int[]|array<string,int> */
     private function getSupportedTables() : array
     {
         try {
@@ -47,7 +47,7 @@ SQL;
             $statement->bindValue('type', self::TYPE_SUBMIT_NOTIFICATION);
             $statement->bindValue('empty', '');
             $statement->execute();
-        } catch (InvalidFieldNameException $e) {
+        } catch (DBALException $e) {
             return [];
         }
 
