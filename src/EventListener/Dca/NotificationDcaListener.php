@@ -9,18 +9,13 @@ use Contao\DataContainer;
 use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\DcaNotification\Notification\DcaNotification;
-use Netzmacht\Contao\Toolkit\Dca\Listener\AbstractListener;
-use Netzmacht\Contao\Toolkit\Dca\Manager;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\TranslatorInterface;
 use function array_key_exists;
 use function sprintf;
 
-final class NotificationDcaListener extends AbstractListener
+final class NotificationDcaListener
 {
-    /** @var string */
-    protected static $name = 'tl_nc_notification';
-
     /** @var TranslatorInterface */
     private $translator;
 
@@ -31,13 +26,10 @@ final class NotificationDcaListener extends AbstractListener
     private $connection;
 
     public function __construct(
-        Manager $dcaManager,
         TranslatorInterface $translator,
         ResourceFinder $resourceFinder,
         Connection $connection
     ) {
-        parent::__construct($dcaManager);
-
         $this->translator     = $translator;
         $this->resourceFinder = $resourceFinder;
         $this->connection     = $connection;

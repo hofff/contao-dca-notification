@@ -14,7 +14,6 @@
         </service>
 
         <service id="Hofff\Contao\DcaNotification\EventListener\Dca\NotificationDcaListener" public="true">
-            <argument type="service" id="netzmacht.contao_toolkit.dca.manager"/>
             <argument type="service" id="translator"/>
             <argument type="service" id="contao.resource_finder"/>
             <argument type="service" id="database_connection"/>
