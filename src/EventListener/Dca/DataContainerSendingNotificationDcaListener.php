@@ -32,8 +32,12 @@ final class DataContainerSendingNotificationDcaListener
         $this->connection        = $connection;
     }
 
-    public function onSubmit(DataContainer $dataContainer) : void
+    public function onSubmit($dataContainer) : void
     {
+        if (!$dataContainer instanceof DataContainer) {
+            return;
+        }
+
         $activeRecord = $dataContainer->activeRecord;
 
         if (! $activeRecord->hofff_dca_notification_send || ! $activeRecord->hofff_dca_notification_notification) {
