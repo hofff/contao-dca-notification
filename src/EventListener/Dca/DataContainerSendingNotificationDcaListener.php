@@ -32,9 +32,10 @@ final class DataContainerSendingNotificationDcaListener
         $this->connection        = $connection;
     }
 
+    /** @param DataContainer|object $dataContainer */
     public function onSubmit($dataContainer) : void
     {
-        if (!$dataContainer instanceof DataContainer) {
+        if (! $dataContainer instanceof DataContainer) {
             return;
         }
 
