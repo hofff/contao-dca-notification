@@ -40,7 +40,7 @@
   },
   "require-dev": {
     "contao/manager-plugin": "^2.1",
-    "doctrine/coding-standard": "^5.0"
+    "doctrine/coding-standard": "^6.0"
   },
   "extra": {
     "branch-alias": {

@@ -103,7 +103,6 @@ final class AddNotificationFieldsListener
         }
     }
 
-
     /** @return mixed[] */
     private function notificationSendDca() : array
     {
