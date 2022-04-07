@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Hofff\Contao\DcaNotification\EventListener\Hook;
 
 use Hofff\Contao\DcaNotification\Notification\DcaNotification;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TranslateNotificationLegendListener
 {
-    /** @var DcaNotification */
-    private $dcaNotification;
+    private DcaNotification $dcaNotification;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(DcaNotification $dcaNotification, TranslatorInterface $translator)
     {
@@ -21,7 +19,8 @@ final class TranslateNotificationLegendListener
         $this->translator      = $translator;
     }
 
-    public function onLoadLanguageFile(string $name, string $language) : void
+    /** @SuppressWarnings(PHPMD.Superglobals) */
+    public function onLoadLanguageFile(string $name, string $language): void
     {
         if (! $this->dcaNotification->supports($name)) {
             return;

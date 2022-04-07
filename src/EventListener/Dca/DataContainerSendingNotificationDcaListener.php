@@ -7,6 +7,7 @@ namespace Hofff\Contao\DcaNotification\EventListener\Dca;
 use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\Model;
+use Contao\Model\Collection;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\DcaNotification\Notification\DcaNotification;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
@@ -14,16 +15,14 @@ use Netzmacht\Contao\Toolkit\Dca\Manager as DcaManager;
 use Netzmacht\Contao\Toolkit\Dca\Options\OptionsBuilder;
 use NotificationCenter\Model\Notification;
 
+/** @SuppressWarnings(PHPMD.LongClassName) */
 final class DataContainerSendingNotificationDcaListener
 {
-    /** @var DcaManager */
-    private $dcaManager;
+    private DcaManager $dcaManager;
 
-    /** @var RepositoryManager */
-    private $repositoryManager;
+    private RepositoryManager $repositoryManager;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(DcaManager $dcaManager, RepositoryManager $repositoryManager, Connection $connection)
     {
@@ -33,7 +32,7 @@ final class DataContainerSendingNotificationDcaListener
     }
 
     /** @param DataContainer|object $dataContainer */
-    public function onSubmit($dataContainer) : void
+    public function onSubmit($dataContainer): void
     {
         if (! $dataContainer instanceof DataContainer) {
             return;
@@ -41,7 +40,14 @@ final class DataContainerSendingNotificationDcaListener
 
         $activeRecord = $dataContainer->activeRecord;
 
-        if (! $activeRecord->hofff_dca_notification_send || ! $activeRecord->hofff_dca_notification_notification) {
+        // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+        if (
+            $activeRecord === null
+            || ! $activeRecord->hofff_dca_notification_send
+            || ! $activeRecord->hofff_dca_notification_notification
+        ) {
+            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+
             return;
         }
 
@@ -52,9 +58,9 @@ final class DataContainerSendingNotificationDcaListener
     /**
      * @param DataContainer|object|null $dataContainer
      *
-     * @return string[]
+     * @return array<string, array<string, string>|string>
      */
-    public function notificationOptions($dataContainer) : array
+    public function notificationOptions($dataContainer): array
     {
         $repository = $this->repositoryManager->getRepository(Notification::class);
 
@@ -68,28 +74,43 @@ final class DataContainerSendingNotificationDcaListener
             $collection = $repository->findAll(['.order' => 'title']);
         }
 
-        return OptionsBuilder::fromCollection($collection, 'title')->getOptions();
+        if ($collection instanceof Collection) {
+            return OptionsBuilder::fromCollection($collection, 'title')->getOptions();
+        }
+
+        return [];
     }
 
-    private function sendNotification(DataContainer $dataContainer) : void
+    private function sendNotification(DataContainer $dataContainer): void
     {
+        if ($dataContainer->activeRecord === null) {
+            return;
+        }
+
         $repository   = $this->repositoryManager->getRepository(Notification::class);
         $notification = $repository->find((int) $dataContainer->activeRecord->hofff_dca_notification_notification);
 
-        if (! $notification instanceof Notification || $notification->type !== DcaNotification::TYPE_SUBMIT_NOTIFICATION) {
+        if (
+            ! $notification instanceof Notification
+            || $notification->type !== DcaNotification::TYPE_SUBMIT_NOTIFICATION
+        ) {
             return;
         }
 
         $notification->send($this->buildTokens($dataContainer));
     }
 
-    private function resetSendValue(string $table, int $recordId) : void
+    private function resetSendValue(string $table, int $recordId): void
     {
         $this->connection->update($table, ['hofff_dca_notification_send' => ''], ['id' => $recordId]);
     }
 
-    /** @return mixed[] */
-    private function buildTokens(DataContainer $dataContainer) : array
+    /**
+     * @return array<string,mixed>
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private function buildTokens(DataContainer $dataContainer): array
     {
         $formatter = $this->dcaManager->getFormatter($dataContainer->table);
         $tokens    = ['admin_email' => $GLOBALS['TL_ADMIN_EMAIL']];

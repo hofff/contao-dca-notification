@@ -9,21 +9,18 @@ use Contao\DataContainer;
 use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\DcaNotification\Notification\DcaNotification;
-use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 use function array_key_exists;
 use function sprintf;
 
 final class NotificationDcaListener
 {
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var ResourceFinder */
-    private $resourceFinder;
+    private ResourceFinder $resourceFinder;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -35,14 +32,14 @@ final class NotificationDcaListener
         $this->connection     = $connection;
     }
 
-    public function updateTableSchema(DataContainer $dataContainer) : void
+    public function updateTableSchema(DataContainer $dataContainer): void
     {
         $activeRecord = $dataContainer->activeRecord;
-
-        if ($activeRecord->type !== DcaNotification::TYPE_SUBMIT_NOTIFICATION) {
+        if ($activeRecord === null || $activeRecord->type !== DcaNotification::TYPE_SUBMIT_NOTIFICATION) {
             return;
         }
 
+        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         $tableName     = $activeRecord->hofff_dca_notification_table;
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -52,7 +49,7 @@ final class NotificationDcaListener
 
         $columns = $schemaManager->listTableColumns($tableName);
         if (! isset($columns['hofff_dca_notification_send'])) {
-            $this->connection->executeQuery(
+            $this->connection->executeStatement(
                 sprintf(
                     'ALTER TABLE %s ADD hofff_dca_notification_send CHAR(1) NOT NULL DEFAULT \'\'',
                     $tableName
@@ -73,12 +70,11 @@ final class NotificationDcaListener
     }
 
     /** @return string[] */
-    public function tableOptions() : array
+    public function tableOptions(): array
     {
         $options   = [];
         $processed = [];
 
-        /** @var SplFileInfo $file */
         foreach ($this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php') as $file) {
             $tableName = $file->getBasename('.php');
 
@@ -100,7 +96,7 @@ final class NotificationDcaListener
         return $options;
     }
 
-    private function translateTableName(string $tableName) : string
+    private function translateTableName(string $tableName): string
     {
         $key   = 'MOD.' . $tableName;
         $label = $this->translator->trans('MOD.' . $tableName, [], 'contao_modules');

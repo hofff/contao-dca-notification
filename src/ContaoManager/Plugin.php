@@ -13,13 +13,18 @@ use Netzmacht\Contao\Toolkit\Bundle\NetzmachtContaoToolkitBundle;
 
 final class Plugin implements BundlePluginInterface
 {
-    /** @return BundleConfig[] */
-    public function getBundles(ParserInterface $parser) : array
+    /** {@inheritDoc} */
+    public function getBundles(ParserInterface $parser): array
     {
-        return [BundleConfig::create(HofffContaoDcaNotificationBundle::class)
-            ->setLoadAfter(
-                [ContaoCoreBundle::class, NetzmachtContaoToolkitBundle::class, 'notification_center']
-            ),
+        return [
+            BundleConfig::create(HofffContaoDcaNotificationBundle::class)
+                ->setLoadAfter(
+                    [
+                        ContaoCoreBundle::class,
+                        NetzmachtContaoToolkitBundle::class,
+                        'notification_center',
+                    ]
+                ),
         ];
     }
 }

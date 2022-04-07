@@ -13,7 +13,8 @@ $GLOBALS['TL_DCA']['tl_nc_notification']['config']['onsubmit_callback'][] = [
 
 
 // Palettes
-$GLOBALS['TL_DCA']['tl_nc_notification']['palettes'][DcaNotification::TYPE_SUBMIT_NOTIFICATION] = '{title_legend},title,type'
+$GLOBALS['TL_DCA']['tl_nc_notification']['palettes'][DcaNotification::TYPE_SUBMIT_NOTIFICATION] =
+    '{title_legend},title,type'
     . ';{config_legend},hofff_dca_notification_table';
 
 

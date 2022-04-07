@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Hofff\Contao\DcaNotification\Notification;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
-use PDO;
+use Doctrine\DBAL\Exception;
+
 use function array_flip;
 use function array_key_exists;
 
@@ -20,15 +20,14 @@ FROM tl_nc_notification
 WHERE type = :type AND hofff_dca_notification_table != :empty 
 SQL;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    public function supports(string $tableName) : bool
+    public function supports(string $tableName): bool
     {
         static $supportedTables = null;
 
@@ -40,17 +39,20 @@ SQL;
     }
 
     /** @return int[]|array<string,int> */
-    private function getSupportedTables() : array
+    private function getSupportedTables(): array
     {
         try {
-            $statement = $this->connection->prepare(self::QUERY_SUPPORTED_TABLES);
-            $statement->bindValue('type', self::TYPE_SUBMIT_NOTIFICATION);
-            $statement->bindValue('empty', '');
-            $statement->execute();
-        } catch (DBALException $e) {
+            $result = $this->connection->executeQuery(
+                self::QUERY_SUPPORTED_TABLES,
+                [
+                    'type'  => self::TYPE_SUBMIT_NOTIFICATION,
+                    'empty' => '',
+                ]
+            );
+        } catch (Exception $e) {
             return [];
         }
 
-        return array_flip($statement->fetchAll(PDO::FETCH_COLUMN));
+        return array_flip($result->fetchFirstColumn());
     }
 }

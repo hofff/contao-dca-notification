@@ -7,9 +7,9 @@ This extension allows to send notifications in the Contao backend for any databa
 Requirements
 ------------
 
- - Contao `^4.4`
- - PHP `>= 7.1`
- - Symfony `^3.3 || ^4.0`
+ - Contao `^4.9`
+ - PHP `^7.4 || ^8.0`
+ - Symfony `^4.4 || ^5.1`
  
 Install
 -------

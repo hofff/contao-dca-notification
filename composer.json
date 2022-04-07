@@ -1,15 +1,14 @@
 {
   "name": "hofff/contao-dca-notification",
-  "type": "contao-bundle",
   "description": "This library sends notification for any dca based data container",
+  "license": "LGPL-3.0-or-later",
+  "type": "contao-bundle",
   "keywords": [
     "contao",
     "data container",
     "dca",
     "notification"
   ],
-  "homepage": "https://hofff.com/",
-  "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "Nicky Hoff",
@@ -24,38 +23,49 @@
       "role": "Developer"
     }
   ],
-  "require": {
-    "php": ">=7.1",
-    "ext-pdo": "*",
-    "contao/core-bundle": "~4.4",
-    "doctrine/dbal": "^2.5",
-    "netzmacht/contao-toolkit": "^3.2",
-    "symfony/config": "^3.3 || ^4.0",
-    "symfony/dependency-injection": "^3.3 || ^4.0",
-    "symfony/http-kernel": "^3.3 || ^4.0",
-    "terminal42/notification_center": "^1.5"
+  "homepage": "https://hofff.com/",
+  "support": {
+    "email": "info@hofff.com",
+    "issues": "https://github.com/hofff/contao-dca-notification/issues",
+    "source": "https://github.com/hofff/contao-dca-notification"
   },
-  "conflict": {
-    "contao/manager-plugin": "<2.1 || >= 3.0"
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "contao/core-bundle": "^4.4",
+    "doctrine/dbal": "^2.11 || ^3.1",
+    "netzmacht/contao-toolkit": "^3.7",
+    "symfony/config": "^4.4 || ^5.1",
+    "symfony/dependency-injection": "^4.4 || ^5.1",
+    "symfony/finder": "^4.4 || ^5.1",
+    "symfony/http-kernel": "^4.4 || ^5.1",
+    "symfony/translation-contracts": "^1.1 || ^2.0",
+    "terminal42/notification_center": "^1.6.1"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.1",
-    "doctrine/coding-standard": "^6.0"
+    "doctrine/coding-standard": "^9.0",
+    "phpcq/runner-bootstrap": "1.x-dev"
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0.x-dev"
-    },
-    "contao-manager-plugin": "Hofff\\Contao\\DcaNotification\\ContaoManager\\Plugin"
+  "conflict": {
+    "contao/manager-plugin": "<2.1 || >= 3.0"
   },
   "autoload": {
     "psr-4": {
       "Hofff\\Contao\\DcaNotification\\": "src/"
     }
   },
-  "support": {
-    "email": "info@hofff.com",
-    "issues": "https://github.com/hofff/contao-dca-notification/issues",
-    "source": "https://github.com/hofff/contao-dca-notification"
+  "config": {
+    "allow-plugins": {
+      "contao-components/installer": false,
+      "contao/manager-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "contao-community-alliance/composer-plugin": true
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    },
+    "contao-manager-plugin": "Hofff\\Contao\\DcaNotification\\ContaoManager\\Plugin"
   }
 }

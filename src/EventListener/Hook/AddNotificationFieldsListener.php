@@ -9,19 +9,17 @@ use Hofff\Contao\DcaNotification\EventListener\Dca\DataContainerSendingNotificat
 use Hofff\Contao\DcaNotification\Notification\DcaNotification;
 use Netzmacht\Contao\Toolkit\Dca\Definition;
 use Netzmacht\Contao\Toolkit\Dca\Manager as DcaManager;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 use function is_string;
 
 final class AddNotificationFieldsListener
 {
-    /** @var DcaManager */
-    private $dcaManager;
+    private DcaManager $dcaManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var DcaNotification */
-    private $dcaNotification;
+    private DcaNotification $dcaNotification;
 
     public function __construct(
         DcaManager $dcaManager,
@@ -33,7 +31,7 @@ final class AddNotificationFieldsListener
         $this->translator      = $translator;
     }
 
-    public function onLoadDataContainer(string $tableName) : void
+    public function onLoadDataContainer(string $tableName): void
     {
         if (! $this->dcaNotification->supports($tableName)) {
             return;
@@ -46,11 +44,11 @@ final class AddNotificationFieldsListener
         $this->addLegendToExistingPalettes($definition);
     }
 
-    protected function addFieldsToDefinition(Definition $definition) : void
+    protected function addFieldsToDefinition(Definition $definition): void
     {
         $definition->modify(
             ['fields'],
-            function (array $fields) : array {
+            function (array $fields): array {
                 $fields['hofff_dca_notification_send']         = $this->notificationSendDca();
                 $fields['hofff_dca_notification_notification'] = $this->notificationDca();
 
@@ -60,7 +58,12 @@ final class AddNotificationFieldsListener
 
         $definition->modify(
             ['config', 'onsubmit_callback'],
-            static function ($callbacks) : array {
+            /**
+             * @param list<array<int,string>|callable>|null $callbacks
+             *
+             * @return list<array<int,string>|callable>
+             */
+            static function (?array $callbacks): array {
                 $callbacks   = $callbacks ?: [];
                 $callbacks[] = [DataContainerSendingNotificationDcaListener::class, 'onSubmit'];
 
@@ -69,13 +72,18 @@ final class AddNotificationFieldsListener
         );
     }
 
-    protected function addSubPaletteToDefinition(Definition $definition) : void
+    protected function addSubPaletteToDefinition(Definition $definition): void
     {
         $definition->set(['subpalettes', 'hofff_dca_notification_send'], 'hofff_dca_notification_notification');
 
         $definition->modify(
             ['palettes', '__selector__'],
-            static function ($config) {
+            /**
+             * @param list<string>|null $config
+             *
+             * @return list<string>
+             */
+            static function (?array $config): array {
                 $config   = $config ?: [];
                 $config[] = 'hofff_dca_notification_send';
 
@@ -84,10 +92,10 @@ final class AddNotificationFieldsListener
         );
     }
 
-    private function addLegendToExistingPalettes(Definition $definition) : void
+    private function addLegendToExistingPalettes(Definition $definition): void
     {
         $manipulator = PaletteManipulator::create()
-            ->addLegend('hofff_dca_notification_legend', null)
+            ->addLegend('hofff_dca_notification_legend', [])
             ->addField(
                 'hofff_dca_notification_send',
                 'hofff_dca_notification_legend',
@@ -104,7 +112,7 @@ final class AddNotificationFieldsListener
     }
 
     /** @return mixed[] */
-    private function notificationSendDca() : array
+    private function notificationSendDca(): array
     {
         return [
             'label'     => [
@@ -130,7 +138,7 @@ final class AddNotificationFieldsListener
     }
 
     /** @return mixed[] */
-    private function notificationDca() : array
+    private function notificationDca(): array
     {
         return [
             'label'            => [
